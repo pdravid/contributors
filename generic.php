@@ -30,7 +30,7 @@ function people_meta_boxx($post) {
     
     $html="";
 
-    $blogusers = get_users( 'blog_id=1&orderby=nicename&role=author' );
+    $blogusers = get_users();
         // Array of WP_User objects.
     foreach ( $blogusers as $user ) {
     ?>
@@ -67,7 +67,7 @@ add_action( 'save_post', 'save_people_checkboxesx' );
             }
         }
 
-         $blogusers = get_users( 'blog_id=1&orderby=nicename&role=author' );
+         $blogusers = get_users();
         // Array of WP_User objects.
             foreach ( $blogusers as $user ) {
         
@@ -92,7 +92,7 @@ function display_contributors($content){
       $html = '<div style="border:1px solid;padding:20px;" ><strong>Contributors<br></strong>';
       $html2 = $html;
       $postid = get_the_id();
-    $blogusers = get_users( 'blog_id=1&orderby=nicename&role=author' );
+    $blogusers = get_users();
     foreach($blogusers as $user ){
         global $wpdb;
 
