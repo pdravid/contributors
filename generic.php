@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Contributors
-Plugin URI:  www.github.com/pushkardravid/contributors
+Plugin URI:  https://github.com/pushkardravid/contributors
 Description: A wordpress plugin to select and display contributors for a post
 Version:     1.0.0
 Author:      Pushkar Dravid
-Author URI:  www.github.com/pushkardravid
+Author URI:  https://github.com/pushkardravid
 License:     GPL2
 */
 
@@ -30,8 +30,7 @@ This function is used to add a metabox to our post screen.
 This is the callback function. This function is called by the metabox to display the list of all the users.
 */
 
-    function users_meta_box($post) {
-        wp_nonce_field( 'my_awesome_nonce', 'awesome_nonce' );    
+    function users_meta_box($post) { 
         $checkboxMeta = get_post_meta( $post->ID );
         $all_users = get_users();
         // Array of WP_User objects.
@@ -130,7 +129,7 @@ This function is used to display the outout that is the list of contributors on 
     };
 
         if($html == $html2){
-            $html.= "No contributors!";
+            $html.= '<span style="padding-left:20px;color:#fff;font-size:20px;">No contributors!</span>';
         }
 
         $html.='</div>';
