@@ -116,14 +116,23 @@ This function is used to display the outout that is the list of contributors on 
         $id = $wpdb->get_var("select ID from $wpdb->users where user_login = '$user->display_name'");
         $key = $wpdb->get_var("select meta_value from $wpdb->postmeta where meta_key='$user->display_name' and post_id = '$postid'");
         if($key == 'yes'){
-             $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $id, 32) .'<span>&nbsp &nbsp'.$user->display_name.'</span></div><br>';
+            if(is_user_logged_in()){
+        
+             $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $id, 32) .'<span>&nbsp &nbsp<a href="../../../../author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
+        
+            }
+            else{
+
+             $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $id, 32) .'<span>&nbsp &nbsp<a href="index.php/author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
+        
+            }
         }
     };
 
         if($html == $html2){
             $html.= "No contributors!";
         }
-   
+
         $html.='</div>';
         $content.= $html;
         return $content;
