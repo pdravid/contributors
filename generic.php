@@ -86,7 +86,7 @@ This is function that is responsible for saving the states of the checkboxes and
          
 }
 
-
+add_filter('the_content','display_contributors');
 /*
 This function is used to display the outout that is the list of contributors on the front side.
 */
@@ -112,9 +112,7 @@ This function is used to display the outout that is the list of contributors on 
 
         global $wpdb;
 
-        $id = $wpdb->get_var("select ID from $wpdb->users where user_login = '$user->display_name'");
-        $key = $wpdb->get_var("select meta_value from $wpdb->postmeta where meta_key='$user->display_name' and post_id = '$postid'");
-        if($key == 'yes'){
+       if(get_post_meta(get_the_id(),$user->display_name)[0] == 'yes'){
             if(is_user_logged_in()){
         
              $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $id, 32) .'<span>&nbsp &nbsp<a href="../../../../author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
@@ -131,12 +129,16 @@ This function is used to display the outout that is the list of contributors on 
         if($html == $html2){
             $html.= '<span style="padding-left:20px;color:#fff;font-size:20px;">No contributors!</span>';
         }
-
+    
         $html.='</div>';
+        
+
+
+
         $content.= $html;
         return $content;
     }
 
-    add_filter('the_content','display_contributors');
+    
 
 ?>
