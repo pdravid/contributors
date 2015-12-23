@@ -8,13 +8,13 @@ Author:      Pushkar Dravid
 Author URI:  https://github.com/pushkardravid
 License:     GPL2
 */
+$ar = ['a','b'];
 
 add_action( 'add_meta_boxes', 'add_custom_box' );
 
 /*
 This function is used to add a metabox to our post screen.
 */
-
     function add_custom_box( $post ) {
         add_meta_box(
             'Meta Box', // ID of the metabox.
@@ -31,21 +31,23 @@ This is the callback function. This function is called by the metabox to display
 */
 
     function users_meta_box($post) { 
-        $checkboxMeta = get_post_meta( $post->ID );
+
+        $checkboxMeta = get_post_meta($post->ID,'contributors',true);
+        $contributors = unserialize($checkboxMeta);
         $all_users = get_users();
         // Array of WP_User objects.
         foreach ( $all_users as $user ) {
-
 ?>
        <input type="checkbox" 
-        name="<?php echo $user->ID;?>"
+        value="<?php echo $user->ID;?>"
+        name="contributors[]"
         id="<?php echo $user->ID;?>" 
-        <?php if ( isset ( $checkboxMeta[$user->ID] ) ){ 
-        checked( $checkboxMeta[$user->ID][0], 'yes' );  }?> />
+        <?php if ( is_array($contributors) && in_array($user->ID,$contributors) ){ 
+           echo "checked = 'checked'"; }?> />
         <?php echo $user->display_name;?><br />
-      
+        
 <?php
-
+    
         } 
     }
 
@@ -56,6 +58,9 @@ This is the callback function. This function is called by the metabox to display
 This is function that is responsible for saving the states of the checkboxes and update them accordingly.
 */
     function save_users_checkboxes( $post_id ) {
+
+       
+
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
             return;
         if ( ( isset ( $_POST['my_awesome_nonce'] ) ) && ( ! wp_verify_nonce( $_POST['my_awesome_nonce'], plugin_basename( __FILE__ ) ) ) )
@@ -69,35 +74,23 @@ This is function that is responsible for saving the states of the checkboxes and
                 return;
             }
         }
-
+        $contributors = serialize($_POST['contributors']);
+        update_post_meta($post_id,'contributors',$contributors);
          $all_users = get_users();
-        // Array of WP_User objects.
-            foreach ( $all_users as $user ) {
         
-
-        //saves the value of each user
-        if( isset( $_POST[ $user->ID ] ) ) {
-            update_post_meta( $post_id, $user->ID, 'yes' );
-        } else {
-            update_post_meta( $post_id, $user->ID, 'no' );
-        }
-
     }
-
-         
-}
 
 add_filter('the_content','display_contributors');
 /*
 This function is used to display the outout that is the list of contributors on the front side.
 */
     function display_contributors($content){
+        global $post;
 
-        wp_nonce_field( 'my_awesome_nonce', 'awesome_nonce' );    
-        $checkboxMeta = get_post_meta( $post->ID );
+        $checkboxMeta = get_post_meta($post->ID,'contributors',true);
+        $contributors = unserialize($checkboxMeta);
+        $display_users = get_users(array('include'=>$contributors));
         $html = '';
-        $all_users = get_users();
-
         $html.= '
         <div 
         style="background-color: #707070;
@@ -108,9 +101,9 @@ This function is used to display the outout that is the list of contributors on 
         width:100%;">
         <h2 style="color:#fff;background-color:#F25C27;padding:12px">Contributors for this post</h2> ';
         $html2 = $html;
-        foreach($all_users as $user ){
+        if(is_array($contributors)){
+        foreach($display_users as $user ){
 
-         if(get_post_meta(get_the_id(),$user->ID)[0] == 'yes'){
             if(is_user_logged_in()){
         
              $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $user->ID, 32) .'<span>&nbsp &nbsp<a href="../../../../author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
@@ -120,19 +113,16 @@ This function is used to display the outout that is the list of contributors on 
 
              $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $user->ID, 32) .'<span>&nbsp &nbsp<a href="index.php/author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
         
-            }
-        }
+         }
+        
     };
+}
 
         if($html == $html2){
             $html.= '<span style="padding-left:20px;color:#fff;font-size:20px;">No contributors!</span>';
         }
     
-        $html.='</div>';
-        
-
-
-
+        $html.= '</div>';
         $content.= $html;
         return $content;
     }
