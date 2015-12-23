@@ -89,7 +89,7 @@ This function is used to display the outout that is the list of contributors on 
 
         $checkboxMeta = get_post_meta($post->ID,'contributors',true);
         $contributors = unserialize($checkboxMeta);
-        $display_users = get_users(array('include'=>$contributors));
+        $display_users = get_users(array('include'=>$contributors)); //This fetches an array of only those users that have been checked on the admin side. 
         $html = '';
         $html.= '
         <div 
