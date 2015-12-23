@@ -8,7 +8,6 @@ Author:      Pushkar Dravid
 Author URI:  https://github.com/pushkardravid
 License:     GPL2
 */
-$ar = ['a','b'];
 
 add_action( 'add_meta_boxes', 'add_custom_box' );
 
@@ -89,7 +88,6 @@ This function is used to display the outout that is the list of contributors on 
 
         $checkboxMeta = get_post_meta($post->ID,'contributors',true);
         $contributors = unserialize($checkboxMeta);
-        $display_users = get_users(array('include'=>$contributors)); //This fetches an array of only those users that have been checked on the admin side. 
         $html = '';
         $html.= '
         <div 
@@ -101,6 +99,7 @@ This function is used to display the outout that is the list of contributors on 
         width:100%;">
         <h2 style="color:#fff;background-color:#F25C27;padding:12px">Contributors for this post</h2> ';
         $html2 = $html;
+        $display_users = get_users(array('include'=>$contributors)); //This fetches an array of only those users that have been checked on the admin side. 
         if(is_array($contributors)){
         foreach($display_users as $user ){
 
@@ -126,7 +125,5 @@ This function is used to display the outout that is the list of contributors on 
         $content.= $html;
         return $content;
     }
-
-    
 
 ?>
