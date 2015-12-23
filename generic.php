@@ -35,12 +35,13 @@ This is the callback function. This function is called by the metabox to display
         $all_users = get_users();
         // Array of WP_User objects.
         foreach ( $all_users as $user ) {
+
 ?>
        <input type="checkbox" 
-        name="<?php echo $user->display_name;?>"
-        id="<?php echo $user->display_name;?>" 
-        <?php if ( isset ( $checkboxMeta[$user->display_name] ) ){ 
-        checked( $checkboxMeta[$user->display_name][0], 'yes' );  }?> />
+        name="<?php echo $user->ID;?>"
+        id="<?php echo $user->ID;?>" 
+        <?php if ( isset ( $checkboxMeta[$user->ID] ) ){ 
+        checked( $checkboxMeta[$user->ID][0], 'yes' );  }?> />
         <?php echo $user->display_name;?><br />
       
 <?php
@@ -75,10 +76,10 @@ This is function that is responsible for saving the states of the checkboxes and
         
 
         //saves the value of each user
-        if( isset( $_POST[ $user->display_name ] ) ) {
-            update_post_meta( $post_id, $user->display_name, 'yes' );
+        if( isset( $_POST[ $user->ID ] ) ) {
+            update_post_meta( $post_id, $user->ID, 'yes' );
         } else {
-            update_post_meta( $post_id, $user->display_name, 'no' );
+            update_post_meta( $post_id, $user->ID, 'no' );
         }
 
     }
@@ -95,7 +96,6 @@ This function is used to display the outout that is the list of contributors on 
         wp_nonce_field( 'my_awesome_nonce', 'awesome_nonce' );    
         $checkboxMeta = get_post_meta( $post->ID );
         $html = '';
-        $postid = get_the_id();
         $all_users = get_users();
 
         $html.= '
@@ -110,17 +110,15 @@ This function is used to display the outout that is the list of contributors on 
         $html2 = $html;
         foreach($all_users as $user ){
 
-        global $wpdb;
-
-       if(get_post_meta(get_the_id(),$user->display_name)[0] == 'yes'){
+         if(get_post_meta(get_the_id(),$user->ID)[0] == 'yes'){
             if(is_user_logged_in()){
         
-             $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $id, 32) .'<span>&nbsp &nbsp<a href="../../../../author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
+             $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $user->ID, 32) .'<span>&nbsp &nbsp<a href="../../../../author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
         
             }
             else{
 
-             $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $id, 32) .'<span>&nbsp &nbsp<a href="index.php/author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
+             $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $user->ID, 32) .'<span>&nbsp &nbsp<a href="index.php/author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
         
             }
         }
