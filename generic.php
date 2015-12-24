@@ -102,19 +102,8 @@ function display_contributors($content){
     $display_users = get_users(array('include'=>$contributors)); //This fetches an array of only those users that have been checked on the admin side. 
     if(is_array($contributors)){
     foreach($display_users as $user ){
-
-        if(is_user_logged_in()){
-    
-         $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $user->ID, 32) .'<span>&nbsp &nbsp<a href="../../../../author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
-    
-        }
-        else{
-
-         $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $user->ID, 32) .'<span>&nbsp &nbsp<a href="index.php/author/'.$user->display_name.'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
-    
-     }
-    
-};
+        $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $user->ID, 32) .'<span>&nbsp &nbsp<a href="'.get_author_posts_url($user->ID).'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
+    };
 }
 
     if($html == $html2){
