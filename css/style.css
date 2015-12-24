@@ -1,0 +1,23 @@
+.contributors{
+	background-color: #707070;
+    box-shadow:2px 5px 12px 2px #333;
+    -moz-box-shadow:5px 5px 12px 5px #333;
+    -webkit-box-shadow:5px 5px 12px 0px #333;
+    float:center;
+    width:100%;
+}
+.heading{
+color:#fff;
+background-color:#F25C27;
+padding:12px;
+
+}
+.anchor{
+	padding-left: 20px;
+	text-decoration: none;
+	color: #fff;
+	box-shadow: none !important;
+}
+.users{
+	padding-left: 20px;
+}

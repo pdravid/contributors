@@ -9,6 +9,15 @@ Author URI:  https://github.com/pushkardravid
 License:     GPL2
 */
 
+/**
+*This function adds the css file.
+*/
+add_action('wp_head','add_my_style');
+
+function add_my_style(){
+    wp_enqueue_style("my_style",plugins_url("contributors/css/style.css"));
+}
+
 add_action( 'add_meta_boxes', 'add_custom_box' );
 
 /**
@@ -84,34 +93,32 @@ add_filter('the_content','display_contributors');
 *This function is used to display the outout that is the list of contributors on the front side.
 */
 function display_contributors($content){
+
     global $post;
+
+    if(!is_singular("post"))
+        return;
 
     $checkboxMeta = get_post_meta($post->ID,'contributors',true);
     $contributors = unserialize($checkboxMeta);
     $html = '';
     $html.= '
-    <div 
-    style="background-color: #707070;
-    box-shadow:2px 5px 12px 2px #333;
-    -moz-box-shadow:5px 5px 12px 5px #333;
-    -webkit-box-shadow:5px 5px 12px 0px #333;
-    float:center;
-    width:100%;">
-    <h2 style="color:#fff;background-color:#F25C27;padding:12px">Contributors for this post</h2> ';
+    <div class="contributors">
+    <h2 class="heading">Contributors for this post</h2> ';
     $html2 = $html;
     $display_users = get_users(array('include'=>$contributors)); //This fetches an array of only those users that have been checked on the admin side. 
     if(is_array($contributors)){
     foreach($display_users as $user ){
-        $html.= '<div style="padding-left:20px;text-decoration:none;color:#fff">'.get_avatar( $user->ID, 32) .'<span>&nbsp &nbsp<a href="'.get_author_posts_url($user->ID).'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></span></div><br>';
+        $html.= '<div class="users">'.get_avatar( $user->ID, 32) .'<a class="anchor" href="'.get_author_posts_url($user->ID).'" style=" color:#fff;text-decoration:none;">'.$user->display_name.'</a></div><br>';
     };
 }
 
     if($html == $html2){
-        $html.= '<span style="padding-left:20px;color:#fff;font-size:20px;">No contributors!</span>';
+        $html.= '<span class="anchor">No contributors!</span>';
     }
 
     $html.= '</div>';
-    $content.= $html;
+    $content.= $html;    
     return $content;
 }
 
